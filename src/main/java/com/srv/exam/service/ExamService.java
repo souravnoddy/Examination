@@ -1,6 +1,7 @@
 package com.srv.exam.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.srv.exam.constants.Role;
 import com.srv.exam.dto.ExamCreateRequest;
 import com.srv.exam.entity.Examination;
 import com.srv.exam.entity.Question;
@@ -17,23 +18,43 @@ public class ExamService {
   @Autowired ExamRepository examRepository;
   @Autowired QuestionRepository questionRepository;
 
-  public Examination createExamination(ExamCreateRequest question) {
-    Examination examination = new ObjectMapper().convertValue(question, Examination.class);
-    PageRequest pageRequest = PageRequest.of(0, question.getNumberOfQuestions());
-    List<Question> questionList =
-        questionRepository
-            .findBySubjectAndEnabled(examination.getSubject(), true, pageRequest)
-            .getContent();
+  public Examination createExamination(ExamCreateRequest examCreateRequest) {
+    Examination examination = new ObjectMapper().convertValue(examCreateRequest, Examination.class);
+    List<Question> questionList = getQuestionList(examCreateRequest);
     examination.setQuestionList(questionList);
 
     return examRepository.save(examination);
   }
 
-  public Examination updateExamination(long id, ExamCreateRequest enableFlagvalue) {
-    return null;
+  private List<Question> getQuestionList(ExamCreateRequest examCreateRequest) {
+    PageRequest pageRequest = PageRequest.of(0, examCreateRequest.getNumberOfQuestions());
+    return questionRepository
+        .findBySubjectAndEnabled(examCreateRequest.getSubject(), true, pageRequest)
+        .getContent();
+  }
+
+  public Examination updateExamination(long id, ExamCreateRequest examCreateRequest) {
+    Examination examination = examRepository.findById(id).get();
+    examination.setExamName(examCreateRequest.getExamName());
+    examination.setExamEndTime(examCreateRequest.getExamEndTime());
+    examination.setExamStartTime(examCreateRequest.getExamStartTime());
+    examination.setNumberOfQuestions(examCreateRequest.getNumberOfQuestions());
+    examination.setSubject(examCreateRequest.getSubject());
+    examination.setQuestionList(getQuestionList(examCreateRequest));
+    return examRepository.save(examination);
   }
 
   public void deleteExamination(long id) {
     examRepository.deleteById(id);
+  }
+
+  public Examination getExamDetails(long id, Role role) {
+    Examination examination = examRepository.findById(id).get();
+    if (Role.STUDENT.equals(role)) {
+      for (Question question : examination.getQuestionList()) {
+        question.setCorrectAnswer(null);
+      }
+    }
+    return examination;
   }
 }

@@ -19,14 +19,18 @@ public class ResultSheet {
   @Id
   private long id;
 
-  private String userId;
+  private long userId;
 
   private Subject subject;
+  private long examId;
 
-  private String examDate;
+  @Temporal(TemporalType.TIMESTAMP)
+  private Date examDate;
 
+  @Temporal(TemporalType.TIMESTAMP)
   private Date loginTime;
 
+  @Temporal(TemporalType.TIMESTAMP)
   private Date logoutTime;
 
   @ElementCollection(targetClass = String.class)

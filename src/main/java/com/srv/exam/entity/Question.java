@@ -1,5 +1,6 @@
 package com.srv.exam.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.srv.exam.constants.QuestionType;
 import com.srv.exam.constants.Subject;
 import java.util.List;
@@ -14,6 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Question {
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Id

@@ -1,5 +1,6 @@
 package com.srv.exam.controller;
 
+import com.srv.exam.constants.Role;
 import com.srv.exam.dto.ExamCreateRequest;
 import com.srv.exam.service.ExamService;
 import com.srv.exam.validation.ValidationUtils;
@@ -42,5 +43,14 @@ public class ExamController {
     log.info("Exam Deletion request - id - {}", id);
     examService.deleteExamination(id);
     return ResponseEntity.ok().build();
+  }
+
+  @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+  public ResponseEntity<?> getExamDetails(
+      @PathVariable long id,
+      @RequestHeader(value = "TraceId", required = false) String traceId,
+      @RequestHeader(value = "Role", required = false, defaultValue = "STUDENT") Role role) {
+
+    return ResponseEntity.ok(examService.getExamDetails(id, role));
   }
 }

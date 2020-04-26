@@ -21,8 +21,13 @@ public class Examination {
   private long id;
 
   private String examName;
+
+  @Temporal(TemporalType.TIMESTAMP)
   private Date examStartTime;
+
+  @Temporal(TemporalType.TIMESTAMP)
   private Date examEndTime;
+
   private int numberOfQuestions;
 
   @Enumerated(EnumType.STRING)
