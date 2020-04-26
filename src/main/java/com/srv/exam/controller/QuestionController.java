@@ -29,10 +29,11 @@ public class QuestionController {
   @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
   public ResponseEntity<?> disableQuestion(
       @PathVariable long id,
-      @RequestParam(value = "enableFlagValue",required = false,defaultValue = "false") boolean enableFlagvalue,
+      @RequestParam(value = "enableFlagValue", required = false, defaultValue = "false")
+          boolean enableFlagvalue,
       @RequestHeader(value = "TraceId", required = false) String traceId) {
     log.info("Question disable request - id - {}", id);
-    questionService.disableQuestion(id,enableFlagvalue);
+    questionService.disableQuestion(id, enableFlagvalue);
     return ResponseEntity.ok().build();
   }
 }

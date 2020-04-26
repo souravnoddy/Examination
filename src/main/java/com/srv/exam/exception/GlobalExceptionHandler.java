@@ -15,6 +15,8 @@ public class GlobalExceptionHandler {
   @ExceptionHandler({Exception.class})
   public final ResponseEntity<ExceptionResponse> handleException(Exception ex, WebRequest request) {
 
+    log.error("Exception", ex);
+
     if (ex instanceof BusinessException) {
       if (((BusinessException) ex).isPrintStackTrace()) {
         return handleException(((BusinessException) ex).getErrorStatus(), ex, request);

@@ -48,8 +48,12 @@ public class QuestionService {
   }
 
   public void disableQuestion(long questionId, boolean enableFlagvalue) {
-      Question question = questionRepository.getOne(questionId);
-      question.setEnabled(enableFlagvalue);
-      questionRepository.save(question);
+    questionRepository
+        .findById(questionId)
+        .ifPresent(
+            question -> {
+              question.setEnabled(enableFlagvalue);
+              questionRepository.save(question);
+            });
   }
 }
